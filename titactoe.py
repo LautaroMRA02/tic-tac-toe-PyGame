@@ -1,6 +1,6 @@
 #import module
 import pygame
-from pygame import mask
+# from pygame import mask
 from pygame.locals import *
 
 
@@ -15,8 +15,14 @@ pygame.display.set_caption('TicTacToe')
 
 #defino variables
 line_width = 6
-
 markers = []
+clicked = False
+pos = []
+player = 1
+#define colors
+green = (0,255,0)
+red = (255,0,0)
+
 
 def draw_grid():
     bg = (255,255,200)
@@ -30,20 +36,43 @@ for x in range(3):
     row = [0]*3
     markers.append(row)
 
-print(markers) 
+# print(markers) 
+def draw_markers():
+    x_pos = 0
+    for x in markers:
+        y_pos = 0
+        for y in x:
+            if y == 1:
+                pygame.draw.line(screen,  green,( x_pos * 100 + 15, y_pos * 100 + 15), (x_pos * 100 + 85, y_pos * 100 + 85), line_width)
+                pygame.draw.line(screen,  green,( x_pos * 100 + 15, y_pos * 100 + 85), (x_pos * 100 + 85, y_pos * 100 + 15), line_width)
+            if y == -1:
+                pygame.draw.circle(screen, red, (x_pos * 100 + 50, y_pos * 100 + 50), 38, line_width )
+            y_pos += 1
+        x_pos +=1
 
 
 run = True
 while run:
 
     draw_grid()
+    draw_markers()
+
+
 
     #event handless
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
-    
+        if event.type == pygame.MOUSEBUTTONDOWN and clicked == True:
+            clicked = True
+        if event.type == pygame.MOUSEBUTTONUP and clicked == True:
+            clicked = False
+            pos = pygame.mouse.get_pos()
+            cell_x = pos[0]
+            cell_y = pos[1]
+            if markers[cell_x // 100][cell_y // 100] == 0:
+                markers[cell_x // 100][cell_y // 100] = player
+                player *= -1
     
     pygame.display.update()
 
